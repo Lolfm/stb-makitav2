@@ -417,11 +417,7 @@ def benutzer_login(request):
             user = form.get_user()
             login(request, user)
 
-            # Weiterleitung je nach Gruppe
-            if user.groups.filter(name="Empfang").exists():
-                return redirect("unterweisung_auswahl")
-            else:
-                return redirect("dashboard")
+            return redirect("dashboard")
     else:
         form = AuthenticationForm()
     return render(request, "unterweisungen/login.html", {"form": form})
