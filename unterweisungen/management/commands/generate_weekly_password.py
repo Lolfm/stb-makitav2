@@ -1,10 +1,11 @@
 # management/commands/generate_weekly_password.py
 from django.core.management.base import BaseCommand
-from unterweisungen.models import WeeklyAccess
+from unterweisungen.models import WeeklyAccess, EmailEmpfaenger
 from django.utils import timezone
 import secrets
 from datetime import timedelta
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 
 class Command(BaseCommand):
@@ -19,12 +20,15 @@ class Command(BaseCommand):
             access = WeeklyAccess.objects.create(woche=montag, passwort=neues_pw)
 
             # Versenden
+            recipient_list = list(EmailEmpfaenger.objects.values_list('email', flat=True))
+
             send_mail(
-                subject="Wöchentliches Zugangspasswort",
-                message=f"Das neue Zugangspasswort lautet: {neues_pw}",
-                from_email="system@deinefirma.at",
-                recipient_list=["empfang@deinefirma.at", "chef@firma.at"]
+                subject="Wöchentliches Zugangspasswort [miloIT Fremdfirmenunterweisung]",
+                message=f"Liebe Empfänger! \nDas neue Zugangspasswort für diese Woche lautet: {neues_pw} \n Beste Grüße,\nDas miloIT System",
+                from_email="miloIT Fremdfirmenunterweisung <noreply@miloit.at>",
+                recipient_list=recipient_list
             )
+
             self.stdout.write(self.style.SUCCESS(f"Passwort erstellt und versendet: {neues_pw}"))
         else:
             self.stdout.write("Für diese Woche existiert bereits ein Passwort.")

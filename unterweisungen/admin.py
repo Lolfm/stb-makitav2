@@ -14,6 +14,11 @@ from django.contrib import admin
 from .models import Unterweisungstyp, Teilnehmer, QuizFrage, QuizAntwort
 from markdownx.admin import MarkdownxModelAdmin
 
+
+from .models import EmailEmpfaenger
+admin.site.register(EmailEmpfaenger)
+
+
 @admin.register(Unterweisungstyp)
 class UnterweisungstypAdmin(MarkdownxModelAdmin):
     list_display = ['name', 'unterweisung_art', 'slug']

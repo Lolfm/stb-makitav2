@@ -25,7 +25,16 @@ SECRET_KEY = 'django-insecure-ax24z1lyw+5q9w_+o8f42%(-9tdybk(9$&062ejvhbop9ceewl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['makitademo.miloit.at', '127.0.0.1', 'localhost']
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "mail.your-server.de"  # z. B. smtp.gmail.com, mail.miloit.at etc.
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "noreply@miloit.at"  # deine Absenderadresse
+EMAIL_HOST_PASSWORD = "noreply@Filip123!"
+DEFAULT_FROM_EMAIL = "miloIT Fremdfirmenunterweisung <noreply@miloit.at>"
 
 
 # Application definition

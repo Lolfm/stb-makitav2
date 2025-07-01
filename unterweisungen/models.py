@@ -78,3 +78,10 @@ class QuizAntwort(models.Model):
 def ist_im_haus(self):
     letzter = self.checkeintrag_set.order_by('-zeitpunkt').first()
     return letzter and letzter.aktion == 'ein'
+
+
+class EmailEmpfaenger(models.Model):
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.email
