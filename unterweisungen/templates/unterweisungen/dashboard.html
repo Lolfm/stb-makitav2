@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "unterweisungen/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<h2 class="text-2xl font-semibold mb-6">Dashboard</h2>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+  <a href="{% url 'teilnehmer_liste' %}" class="block bg-white shadow rounded p-6 border hover:bg-gray-50 transition">
+    <p class="text-sm text-gray-500">Gesamtteilnehmer</p>
+    <p class="text-2xl font-bold text-gray-800">{{ gesamt }}</p>
+  </a>
+
+  <a href="{% url 'teilnehmer_liste' %}?filter=gueltig" class="block bg-green-100 shadow rounded p-6 border hover:bg-green-200 transition">
+    <p class="text-sm text-green-700">Gültige Unterweisungen</p>
+    <p class="text-2xl font-bold text-green-800">{{ gueltige }}</p>
+  </a>
+
+  <a href="{% url 'teilnehmer_liste' %}?filter=abgelaufen" class="block bg-red-100 shadow rounded p-6 border hover:bg-red-200 transition">
+    <p class="text-sm text-red-700">Abgelaufen</p>
+    <p class="text-2xl font-bold text-red-800">{{ abgelaufen }}</p>
+  </a>
+
+  <a href="{% url 'teilnehmer_liste' %}?filter=imhaus" class="block bg-blue-100 shadow rounded p-6 border hover:bg-blue-200 transition">
+    <p class="text-sm text-blue-700">Im Gebäude</p>
+    <p class="text-2xl font-bold text-blue-800">{{ im_haus }}</p>
+  </a>
+
+  <a href="{% url 'teilnehmer_liste' %}?filter=nichthaus" class="block bg-gray-100 shadow rounded p-6 border hover:bg-gray-200 transition">
+    <p class="text-sm text-gray-700">Nicht im Gebäude</p>
+    <p class="text-2xl font-bold text-gray-800">{{ nicht_im_haus }}</p>
+  </a>
+
+  <a href="{% url 'teilnehmer_liste' %}" class="block bg-purple-100 shadow rounded p-6 border hover:bg-purple-200 transition">
+    <p class="text-sm text-purple-700">Zur Übersicht</p>
+    <p class="text-2xl font-bold text-purple-800">🔍</p>
+  </a>
+
+
+</div>
+
+{% endblock %}

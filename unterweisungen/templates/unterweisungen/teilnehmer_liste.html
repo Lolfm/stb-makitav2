@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "unterweisungen/base.html" %}
+{% block title %}Teilnehmerliste{% endblock %}
+{% block content %}
+
+<h2 class="text-2xl font-semibold mb-4">Teilnehmerübersicht</h2>
+
+<form method="get" class="mb-6 flex gap-2">
+  {{ form.suchbegriff }}
+  <input type="hidden" name="filter" value="{{ request.GET.filter }}">
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Suchen</button>
+</form>
+
+
+<div class="flex flex-wrap gap-2 mb-6">
+  <a href="{% url 'teilnehmer_liste' %}" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm {% if not request.GET.filter %}font-bold{% endif %}">Alle</a>
+  <a href="?filter=gueltig" class="px-3 py-1 rounded bg-green-100 hover:bg-green-200 text-sm {% if request.GET.filter == 'gueltig' %}font-bold text-green-800{% endif %}">✅ Gültig</a>
+  <a href="?filter=abgelaufen" class="px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-sm {% if request.GET.filter == 'abgelaufen' %}font-bold text-red-800{% endif %}">❌ Abgelaufen</a>
+  <a href="?filter=imhaus" class="px-3 py-1 rounded bg-blue-100 hover:bg-blue-200 text-sm {% if request.GET.filter == 'imhaus' %}font-bold text-blue-800{% endif %}">🏠 Im Haus</a>
+  <a href="?filter=nichthaus" class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm {% if request.GET.filter == 'nichthaus' %}font-bold text-gray-800{% endif %}">🚪 Nicht im Haus</a>
+<a href="{% url 'teilnehmer_csv_export' %}" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm">
+  📥 CSV Export
+</a>
+
+</div>
+
+
+
+
+{% if teilnehmer_liste %}
+  <ul class="space-y-4">
+  {% for t in teilnehmer_liste %}
+    <li class="p-4 bg-gray-50 border rounded shadow-sm flex justify-between items-center">
+      <div>
+        <p class="font-semibold">{{ t.vorname }} {{ t.nachname }}</p>
+        <p class="text-sm text-gray-600">{{ t.firma }}</p>
+        <p class="text-sm mt-1">
+          {% if t.status == "Im Haus" %}
+            🟢 <span class="text-green-700 font-medium">Im Gebäude</span>
+          {% else %}
+            ⚪ <span class="text-gray-600 font-medium">Nicht im Gebäude</span>
+          {% endif %}
+        </p>
+
+      </div>
+      <a href="{% url 'teilnehmer_detail' t.pk %}"
+         class="text-blue-600 hover:underline font-medium">Details →</a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% else %}
+  <p class="text-gray-500">Keine Teilnehmer gefunden.</p>
+{% endif %}
+
+{% endblock %}

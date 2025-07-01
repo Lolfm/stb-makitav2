@@ -1,10 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends "unterweisungen/base.html" %}
+{% block title %}Formular{% endblock %}
+{% block content %}
+{% load form_extras %}
 
-</body>
-</html>
+<h2>Formular für Unterweisung</h2>
+
+<form method="post">
+  {% csrf_token %}
+
+  <div class="grid gap-4">
+    <div>
+      <label for="id_vorname" class="block font-semibold text-sm">Vorname</label>
+      {{ form.vorname|add_class:"w-full border-gray-300 rounded px-3 py-2 shadow-sm" }}
+    </div>
+
+    <div>
+      <label for="id_nachname" class="block font-semibold text-sm">Nachname</label>
+      {{ form.nachname|add_class:"w-full border-gray-300 rounded px-3 py-2 shadow-sm" }}
+    </div>
+
+    <div>
+      <label for="id_firma" class="block font-semibold text-sm">Firma</label>
+      {{ form.firma|add_class:"w-full border-gray-300 rounded px-3 py-2 shadow-sm" }}
+    </div>
+
+    <div>
+      <label for="id_besuchsgrund" class="block font-semibold text-sm">Besuchsgrund</label>
+      {{ form.besuchsgrund|add_class:"w-full border-gray-300 rounded px-3 py-2 shadow-sm" }}
+    </div>
+
+    <div>
+      <p class="font-semibold text-gray-700">Unterweisungstyp: {{ unterweisungstyp.name }}</p>
+<input type="hidden" name="unterweisungstyp" value="{{ unterweisungstyp.id }}">
+
+    </div>
+
+    <!-- SignaturePad bleibt gleich -->
+    <div>
+      <label class="block font-semibold text-sm">Unterschrift</label>
+      <canvas id="signature-pad" width="400" height="200" class="border rounded shadow"></canvas>
+      <input type="hidden" name="unterschrift" id="unterschrift-input">
+      <button type="button" onclick="clearSignature()" class="mt-2 text-sm text-red-500 hover:underline">Unterschrift löschen</button>
+    </div>
+
+    <button type="submit" onclick="saveSignature()"
+      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+      Abschicken
+    </button>
+  </div>
+</form>
+
+<!-- SignaturePad CDN -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+<script>
+  const canvas = document.getElementById("signature-pad");
+  const signaturePad = new SignaturePad(canvas);
+
+  function clearSignature() {
+    signaturePad.clear();
+  }
+
+  function saveSignature() {
+    if (!signaturePad.isEmpty()) {
+      const dataURL = signaturePad.toDataURL();
+      document.getElementById("unterschrift-input").value = dataURL;
+    }
+  }
+</script>
+{% endblock %}

@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "unterweisungen/base.html" %}
+{% block title %}Erfolg{% endblock %}
+{% block content %}
+
+{% if messages %}
+  <div class="mb-4 space-y-2">
+    {% for message in messages %}
+      <div class="px-4 py-3 rounded text-white
+                  {% if message.tags == 'success' %}bg-green-600
+                  {% elif message.tags == 'info' %}bg-blue-600
+                  {% elif message.tags == 'warning' %}bg-yellow-600
+                  {% elif message.tags == 'error' %}bg-red-600
+                  {% else %}bg-gray-600{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+  <h2 class="text-3xl font-bold mb-6 text-green-700">✅ Unterweisung erfolgreich abgeschlossen!</h2>
+
+  <p class="text-lg mb-2">Danke {{ teilnehmer.vorname }} {{ teilnehmer.nachname }}.</p>
+  <p class="text-md mb-4">Du bist nun bis <strong>{{ teilnehmer.gueltig_bis|date:"d.m.Y" }}</strong> freigeschaltet.</p>
+
+  {% if not teilnehmer.ist_im_haus %}
+    <a href="{% url 'teilnehmer_checkin' teilnehmer.id %}"
+       class="inline-block bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">
+      ✅ Jetzt einchecken
+    </a>
+  {% else %}
+    <p class="text-sm text-gray-500">Du bist bereits eingecheckt.</p>
+  {% endif %}
+
+  <a href="{% url 'dashboard' %}"
+     class="inline-block mt-4 ml-2 bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+     📊 Zum Dashboard
+  </a>
+{% endblock %}

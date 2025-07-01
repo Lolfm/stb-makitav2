@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+  {% extends "unterweisungen/base.html" %}
+  {% load static %}
+  {% block title %}Quiz{% endblock %}
+  {% block content %}
 
-</body>
-</html>
+  <h2 class="text-2xl font-bold mb-6">Unterweisung: {{ unterweisungstyp.name }}</h2>
+
+  <video controls class="w-full max-w-3xl mx-auto mb-6">
+    <source src="{{ unterweisungstyp.video.url }}" type="video/mp4">
+    Dein Browser unterstützt dieses Videoformat nicht.
+  </video>
+
+
+  {% if messages %}
+    <ul class="mb-4">
+      {% for message in messages %}
+        <li class="text-red-600 font-semibold">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+    {% for frage in fragen %}
+      <div class="bg-gray-100 p-4 rounded shadow-sm">
+        <p class="font-semibold">{{ forloop.counter }}. {{ frage.frage }}</p>
+        {% for antwort in frage.quizantwort_set.all %}
+          <label class="block mt-1">
+            <input type="radio" name="frage_{{ frage.id }}" value="{{ antwort.id }}" class="mr-2">
+            {{ antwort.antwort_text }}
+          </label>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <button type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mt-4">
+      ✅ Antworten einreichen
+    </button>
+  </form>
+
+  {% endblock %}

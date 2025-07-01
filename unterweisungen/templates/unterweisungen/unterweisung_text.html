@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "unterweisungen/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">{{ unterweisung.name }}</h2>
+
+{% if unterweisung.unterweisung_art == "text" %}
+  <div class="prose max-w-none bg-white p-6 rounded shadow mb-8">
+    {{ unterweisung.text_html|safe }}
+  </div>
+{% endif %}
+
+{% if messages %}
+  <ul class="mb-4">
+    {% for message in messages %}
+      <li class="text-red-600 font-semibold">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+{% if unterweisung.unterweisung_art == "video" %}
+  <div class="bg-white p-6 rounded shadow mb-8">
+    <video width="100%" controls class="rounded shadow">
+      <source src="{{ unterweisung.video.url }}" type="video/mp4">
+      Dein Browser unterstützt kein Video.
+    </video>
+  </div>
+{% endif %}
+
+<h3 class="text-xl font-semibold mb-4">Quiz zur Unterweisung</h3>
+
+<form method="post" class="mt-6 bg-white p-6 rounded shadow">
+  {% csrf_token %}
+
+  {% for frage in fragen %}
+    <div class="mb-4">
+      <p class="font-semibold">{{ frage.frage }}</p>
+      {% for antwort in frage.quizantwort_set.all %}
+        <label class="block ml-4">
+          <input type="radio" name="frage_{{ frage.id }}" value="{{ antwort.id }}" class="mr-2">
+          {{ antwort.antwort_text }}
+        </label>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    Antworten überprüfen
+  </button>
+</form>
+
+{% endblock %}

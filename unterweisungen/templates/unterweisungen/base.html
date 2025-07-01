@@ -1,13 +1,42 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Unterweisung{% endblock %}</title>
-  <link href="{% static 'css/output.css' %}" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="{% static 'css/output.css' %}" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900">
-  <!-- Navbar + Inhalt wie oben -->
-  {% block content %}{% endblock %}
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- Navigation -->
+  <nav class="bg-gray-800 text-white px-4 py-3 shadow">
+    <div class="flex flex-wrap gap-4 items-center justify-between max-w-6xl mx-auto">
+      <div class="flex gap-4">
+        <a href="{% url 'dashboard' %}" class="hover:underline">📊 Dashboard</a>
+        <a href="{% url 'teilnehmer_liste' %}" class="hover:underline">👥 Teilnehmer</a>
+        <a href="{% url 'unterweisung_auswahl' %}" class="hover:underline">🎓 Unterweisung starten</a>
+      </div>
+      <div class="text-sm">
+        {% if user.is_authenticated %}
+          Angemeldet als <strong>{{ user.username }}</strong> |
+          <a href="{% url 'logout' %}" class="text-red-400 hover:underline">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="text-blue-400 hover:underline">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hauptinhalt -->
+  <main class="flex-grow max-w-5xl mx-auto w-full p-6">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white text-center py-4">
+    <p class="text-sm">Makita – 2025</p>
+  </footer>
+
 </body>
 </html>

@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<h2>Teilnehmer suchen</h2>
+
+<form method="get">
+  {{ form.as_p }}
+  <button type="submit">Suchen</button>
+</form>
+
+{% if teilnehmer_liste %}
+  <h3>Ergebnisse:</h3>
+  <ul>
+    {% for t in teilnehmer_liste %}
+      <li>
+        <strong>{{ t.vorname }} {{ t.nachname }}</strong> – {{ t.firma }}<br>
+        <b>Status:</b> {{ t.status }}<br>
+        <b>Gültig bis:</b> {{ t.gueltig_bis }} {% if t.ist_gueltig %}✅{% else %}❌ abgelaufen{% endif %}<br>
+        {% if t.unterschrift_datei %}
+          <img src="{{ t.unterschrift_datei.url }}" alt="Unterschrift" width="200">
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

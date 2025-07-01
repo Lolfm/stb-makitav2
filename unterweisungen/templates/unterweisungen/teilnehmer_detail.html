@@ -1,10 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "unterweisungen/base.html" %}
+{% block title %}Teilnehmerdetails{% endblock %}
+
+{% block content %}
+<div class="w-full bg-white p-6 sm:p-10 rounded-xl shadow-lg space-y-6">
+
+  <div class="border-b pb-4">
+    <h2 class="text-3xl font-bold text-gray-800">
+      {{ teilnehmer.vorname }} {{ teilnehmer.nachname }}
+    </h2>
+    <p class="text-gray-500">Detailansicht des Teilnehmers</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6 text-gray-700 text-base">
+    <div>
+  <p><strong>🏢 Firma:</strong> {{ teilnehmer.firma }}</p>
+  <p><strong>🎓 Unterweisung:</strong> {{ teilnehmer.unterweisungstyp.name }}</p>
+  <p><strong>📅 Gültig bis:</strong> {{ teilnehmer.gueltig_bis|date:"d.m.Y" }}
+    {% if ist_gueltig %}
+      <span class="text-green-600 font-semibold ml-2">✅ gültig</span>
+    {% else %}
+      <span class="text-red-600 font-semibold ml-2">❌ abgelaufen</span>
+    {% endif %}
+  </p>
+  <p><strong>📍 Status:</strong>
+    {% if status == "Im Haus" %}
+      <span class="text-green-600 font-semibold ml-2">🟢 Im Gebäude</span>
+    {% else %}
+      <span class="text-gray-600 font-semibold ml-2">⚪ Nicht im Gebäude</span>
+    {% endif %}
+  </p>
+</div>
+
+
+    {% if teilnehmer.unterschrift_datei %}
+      <div>
+        <p class="font-semibold mb-1">✍️ Unterschrift:</p>
+        <img src="{{ teilnehmer.unterschrift_datei.url }}" alt="Unterschrift"
+             class="border rounded shadow max-w-xs w-full">
+      </div>
+    {% endif %}
+  </div>
+
+  <form method="post" class="flex flex-wrap gap-4">
+    {% csrf_token %}
+    <button name="checkin" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition">
+      ✅ Einchecken
+    </button>
+    <button name="checkout" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition">
+      ⛔ Auschecken
+    </button>
+  </form>
+
+
+
+  <div>
+    <h3 class="text-xl font-semibold mb-3 mt-6">📋 Check-In / Out Verlauf</h3>
+    {% if check_history %}
+      <ul class="divide-y divide-gray-200">
+        {% for eintrag in check_history %}
+          <li class="py-2 text-sm text-gray-800">
+            {{ eintrag.zeitpunkt|date:"d.m.Y H:i" }} –
+            {% if eintrag.aktion == "ein" %}
+              ✅ <span class="text-green-700 font-medium">Eingecheckt</span>
+            {% else %}
+              ⛔ <span class="text-red-700 font-medium">Ausgecheckt</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-gray-500 text-sm">Noch keine Check-Ins vorhanden.</p>
+    {% endif %}
+  </div>
+
+  {% if user.is_authenticated and user.groups.all.0.name in "Admin Superadmin" %}
+  <form method="post" action="{% url 'teilnehmer_loeschen' teilnehmer.pk %}" onsubmit="return confirm('Willst du diesen Teilnehmer wirklich löschen?');" class="mt-4">
+    {% csrf_token %}
+    <button type="submit" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition">
+      🗑️ Teilnehmer löschen
+    </button>
+  </form>
+  {% endif %}
+
+
+  <div class="pt-4">
+    <a href="{% url 'teilnehmer_liste' %}"
+       class="text-blue-600 hover:underline text-sm inline-block">
+      ← Zurück zur Teilnehmerliste
+    </a>
+  </div>
+
+</div>
+{% endblock %}

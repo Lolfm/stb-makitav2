@@ -1,7 +1,22 @@
-<h2>Willkommen zur Unterweisung</h2>
-<video width="600" controls>
-  <source src="/static/unterweisungsvideo.mp4" type="video/mp4">
-  Dein Browser unterstützt kein Video.
-</video>
-<br>
-<a href="{% url 'unterweisung_quiz' %}">→ Zum Quiz</a>
+{% extends "unterweisungen/base.html" %}
+{% block title %}Unterweisung starten{% endblock %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6">Bitte wähle deinen Unterweisungstyp</h2>
+
+{% if unterweisungstypen %}
+  <ul class="space-y-4">
+    {% for typ in unterweisungstypen %}
+      <li>
+        <a href="{% url 'unterweisung_quiz' typ.id %}"
+           class="block bg-white shadow p-4 rounded border hover:bg-gray-50">
+          🚧 {{ typ.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-red-500">⚠️ Es sind noch keine Unterweisungstypen im System hinterlegt.</p>
+{% endif %}
+
+{% endblock %}

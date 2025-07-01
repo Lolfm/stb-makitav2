@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Teilnehmer PDF</title>
 </head>
 <body>
-$END$
+    <h1>{{ teilnehmer.vorname }} {{ teilnehmer.nachname }}</h1>
+    <p>Firma: {{ teilnehmer.firma }}</p>
+    <p>Gültig bis: {{ teilnehmer.gueltig_bis|date:"d.m.Y" }}</p>
+
+    {% if unterschrift_pfad %}
+    <p>Unterschrift:</p>
+    <img src="{{ unterschrift_pfad }}" width="200">
+    {% else %}
+    <p>Keine Unterschrift vorhanden.</p>
+    {% endif %}
 </body>
 </html>
